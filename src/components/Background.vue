@@ -26,37 +26,18 @@
 <script setup>
 import { mainStore } from "@/store";
 import { Error } from "@icon-park/vue-next";
+import { ref, defineEmits, onMounted, onBeforeUnmount } from "vue";
 
 const store = mainStore();
-const bgUrl = ref(null);
+const bgUrl = ref("https://t.mwm.moe/pc/");
 const imgTimeout = ref(null);
 const emit = defineEmits(["loadComplete"]);
 
-// 壁纸随机数
-// 请依据文件夹内的图片个数修改 Math.random() 后面的第一个数字
-const bgRandom = Math.floor(Math.random() * 10 + 1);
-
-// 更换壁纸链接
-const changeBg = (type) => {
-  if (type == 0) {
-    bgUrl.value = `/images/background${bgRandom}.jpg`;
-  } else if (type == 1) {
-    bgUrl.value = "https://api.dujin.org/bing/1920.php";
-  } else if (type == 2) {
-    bgUrl.value = "https://api.aixiaowai.cn/gqapi/gqapi.php";
-  } else if (type == 3) {
-    bgUrl.value = "https://api.aixiaowai.cn/api/api.php";
-  }
-};
-
 // 图片加载完成
 const imgLoadComplete = () => {
-  imgTimeout.value = setTimeout(
-    () => {
-      store.setImgLoadStatus(true);
-    },
-    Math.floor(Math.random() * (600 - 300 + 1)) + 300,
-  );
+  imgTimeout.value = setTimeout(() => {
+    store.setImgLoadStatus(true);
+  }, Math.floor(Math.random() * (600 - 300 + 1)) + 300);
 };
 
 // 图片动画完成
@@ -76,12 +57,12 @@ const imgLoadError = () => {
       fill: "#efefef",
     }),
   });
-  bgUrl.value = `/images/background${bgRandom}.jpg`;
+  bgUrl.value = "https://t.mwm.moe/pc/";
 };
 
 onMounted(() => {
   // 加载壁纸
-  changeBg(store.coverType);
+  changeBg();
 });
 
 onBeforeUnmount(() => {
@@ -112,9 +93,7 @@ onBeforeUnmount(() => {
     object-fit: cover;
     backface-visibility: hidden;
     filter: blur(20px) brightness(0.3);
-    transition:
-      filter 0.3s,
-      transform 0.3s;
+    transition: filter 0.3s, transform 0.3s;
     animation: fade-blur-in 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     animation-delay: 0.45s;
   }
@@ -143,7 +122,7 @@ onBeforeUnmount(() => {
     right: 0;
     margin: 0 auto;
     display: block;
-    padding: 20px 26px;
+   padding: 20px 26px;
     border-radius: 8px;
     background-color: #00000030;
     width: 120px;
